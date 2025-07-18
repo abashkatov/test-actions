@@ -1,0 +1,26 @@
+services:
+  php-fpm:
+    build: ./docker/php-fpm
+    volumes:
+      - ./:/app:rw
+    environment:
+      PHP_IDE_CONFIG: "serverName=Docker"
+  nginx:
+    image: nginx:1.29.0-alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./:/app
+      - ./var/log/nginx:/var/log/nginx
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - php-fpm
+    working_dir: /app
+  php-cli:
+    build: ./docker/php-cli
+    volumes:
+      - ./:/app:rw
+    environment:
+      PHP_IDE_CONFIG: "serverName=Docker"
+    profiles:
+      - donotstart
