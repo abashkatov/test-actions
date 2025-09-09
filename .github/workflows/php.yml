@@ -8,4 +8,4 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Env Variable
-        run: echo ${{ env.DEP_DEPLOY_PATH }}
+        run: echo 111
