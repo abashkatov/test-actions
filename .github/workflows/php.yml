@@ -1,0 +1,29 @@
+name: deploy_test
+
+on: [workflow_dispatch, push]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+
+      - name: Install dependencies
+        run: composer install
+      - name: Deploy
+        uses: deployphp/action@v1
+        env:
+          DEDEPLOY_PATH: ${{ env.DEDEPLOY_PATH }}
+          DEP_REMOTE_USER: ${{ env.DEP_REMOTE_USER }}
+          DEP_HOSTNAME: ${{ env.DEP_HOSTNAME }}
+          DEP_HTTP_USER: ${{ env.DEP_HTTP_USER }}
+        with:
+          dep: deploy
+          deployer-version: "7.5.12"
+          private-key: ${{ secrets.PRIVATE_KEY }}
