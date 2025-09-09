@@ -16,6 +16,19 @@ add('shared_files', []);
 add('shared_dirs', []);
 add('writable_dirs', []);
 
+set('deploy_path', function () {
+    return getenv('DEDEPLOY_PATH');
+});
+set('remote_user', function () {
+    return getenv('DEP_REMOTE_USER');
+});
+set('env_hostname', function () {
+    return getenv('DEP_HOSTNAME');
+});
+set('http_user', function () {
+    return getenv('DEP_HTTP_USER');
+});
+
 // Custom tasks
 task('deploy:cache:warmup', function () {
     // composer install scripts usually clear and warmup symfony cache
@@ -28,7 +41,9 @@ task('deploy:cache:warmup', function () {
 // Hosts
 
 host('prod')
-    ->set('stage', 'prod');
+    ->set('stage', 'prod')
+    ->set('hostname', '{{env_hostname}}')
+;
 
 // Hooks
 after('deploy:failed', 'deploy:unlock');

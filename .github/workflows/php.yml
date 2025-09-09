@@ -18,12 +18,12 @@ jobs:
         run: composer install
       - name: Deploy
         uses: deployphp/action@v1
+        env:
+          DEDEPLOY_PATH: ${{ env.DEDEPLOY_PATH }}
+          DEP_REMOTE_USER: ${{ env.DEP_REMOTE_USER }}
+          DEP_HOSTNAME: ${{ env.DEP_HOSTNAME }}
+          DEP_HTTP_USER: ${{ env.DEP_HTTP_USER }}
         with:
           dep: deploy
           deployer-version: "7.5.12"
           private-key: ${{ secrets.PRIVATE_KEY }}
-          options: 
-            deploy_path=${{ env.DEP_DEPLOY_PATH }}
-            remote_user=${{ env.DEP_REMOTE_USER }}
-            hostname=${{ env.DEP_HOSTNAME }}
-            http_user=${{ env.DEP_HTTP_USER }}
