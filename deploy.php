@@ -16,6 +16,8 @@ add('shared_files', []);
 add('shared_dirs', []);
 add('writable_dirs', []);
 
+
+
 // Custom tasks
 task('deploy:cache:warmup', function () {
     // composer install scripts usually clear and warmup symfony cache
@@ -28,7 +30,8 @@ task('deploy:cache:warmup', function () {
 // Hosts
 
 host('prod')
-    ->set('stage', 'prod');
+    ->set('stage', 'prod')
+;
 
 // Hooks
 after('deploy:failed', 'deploy:unlock');

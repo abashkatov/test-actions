@@ -5,10 +5,12 @@ on: [workflow_dispatch, push]
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
+    environment: prod
     steps:
       - uses: actions/checkout@v3
 
+      - name: log
+        run: echo "1 ${{ vars.DEP_REMOTE_USER }} 2 ${{ env.DEP_REMOTE_USER }}"
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -16,14 +18,11 @@ jobs:
 
       - name: Install dependencies
         run: composer install
+        
       - name: Deploy
         uses: deployphp/action@v1
         with:
-          dep: deploy
+          dep: deploy -o deploy_path=${{ vars.DEP_DEPLOY_PATH }} -o remote_user=${{ vars.DEP_REMOTE_USER }} -o hostname=${{ vars.DEP_HOSTNAME }} -o http_user=${{ vars.DEP_HTTP_USER }} prod
           deployer-version: "7.5.12"
           private-key: ${{ secrets.PRIVATE_KEY }}
-          options: 
-            deploy_path=${{ env.DEP_DEPLOY_PATH }}
-            remote_user=${{ env.DEP_REMOTE_USER }}
-            hostname=${{ env.DEP_HOSTNAME }}
-            http_user=${{ env.DEP_HTTP_USER }}
+          verbosity: -vvv
