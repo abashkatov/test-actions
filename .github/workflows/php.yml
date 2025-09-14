@@ -1,0 +1,28 @@
+name: deploy_test
+
+on: [workflow_dispatch, push]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: log
+        run: echo "1 ${{ vars.DEP_REMOTE_USER }} 2 ${{ env.DEP_REMOTE_USER }}"
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+
+      - name: Install dependencies
+        run: composer install
+        
+      - name: Deploy
+        uses: deployphp/action@v1
+        with:
+          dep: deploy -o deploy_path=${{ vars.DEP_DEPLOY_PATH }} -o remote_user=${{ vars.DEP_REMOTE_USER }} -o hostname=${{ vars.DEP_HOSTNAME }} -o http_user=${{ vars.DEP_HTTP_USER }} prod
+          deployer-version: "7.5.12"
+          private-key: ${{ secrets.PRIVATE_KEY }}
+          verbosity: -vvv
